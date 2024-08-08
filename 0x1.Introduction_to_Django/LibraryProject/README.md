@@ -1,2 +1,2 @@
-# Django
-Introduction to Django Development Environment Setup
+
+"Introduction to Django Development Environment Setup"
