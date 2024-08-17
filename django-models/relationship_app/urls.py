@@ -9,4 +9,7 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(template_name='relationship_app/templates/relationship_app/login.html'), name='login'),  # Login URL
     path('logout/', views.LogoutView.as_view(template_name='relationship_app/templates/relationship_app/logout.html'), name='logout'),  # Logout URL
     path('register/', views.register, name='register'),  # Registration URL
+    path('admin-view/', views.admin_view, name='admin_view'),  # URL for Admin view
+    path('librarian-view/', views.librarian_view, name='librarian_view'),  # URL for Librarian view
+    path('member-view/', views.member_view, name='member_view'),  # URL for Member view
 ]
