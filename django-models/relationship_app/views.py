@@ -5,6 +5,8 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
+from .models import Book
 
 # Function-Based View: List all books
 def list_books(request):
@@ -54,3 +56,30 @@ def librarian_view(request):
 @user_passes_test(lambda user: check_role(user, 'Member'))
 def member_view(request):
     return render(request, 'relationship_app/templates/relationship_app/member_view.html')
+
+# View to add a book
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    if request.method == 'POST':
+        # Logic for adding a book
+        pass
+    return render(request, 'relationship_app/add_book.html')
+
+# View to edit a book
+@permission_required('relationship_app.can_change_book')
+def edit_book(request, book_id):
+    book = Book.objects.get(id=book_id)
+    if request.method == 'POST':
+        # Logic for editing a book
+        pass
+    return render(request, 'relationship_app/edit_book.html', {'book': book})
+
+# View to delete a book
+@permission_required('relationship_app.can_delete_book')
+def delete_book(request, book_id):
+    book = Book.objects.get(id=book_id)
+    if request.method == 'POST':
+        # Logic for deleting a book
+        book.delete()
+        return redirect('book_list')
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
