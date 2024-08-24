@@ -151,6 +151,9 @@ CSP_SCRIPT_SRC = ("'self'", "https://trusted-scripts.example.com")
 CSP_STYLE_SRC = ("'self'", "https://trusted-styles.example.com")
 CSP_IMG_SRC = ("'self'", "https://trusted-images.example.com")
 
+# Ensure that HTTPS is enforced when running behind a proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Ensure all requests are redirected to HTTPS
 SECURE_SSL_REDIRECT = True
 
