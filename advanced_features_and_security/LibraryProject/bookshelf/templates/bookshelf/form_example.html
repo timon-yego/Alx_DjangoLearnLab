@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Submit Book</h1>
+  <form method="post" action="{% url 'bookshelf:form_action' %}">
+    {% csrf_token %}
+    <label for="title">Book Title:</label>
+    <input type="text" id="title" name="title">
+    
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author">
+    
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}
+
