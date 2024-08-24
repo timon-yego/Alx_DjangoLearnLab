@@ -150,3 +150,11 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", "https://trusted-scripts.example.com")
 CSP_STYLE_SRC = ("'self'", "https://trusted-styles.example.com")
 CSP_IMG_SRC = ("'self'", "https://trusted-images.example.com")
+
+# Ensure all requests are redirected to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Set HSTS header to enforce HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
