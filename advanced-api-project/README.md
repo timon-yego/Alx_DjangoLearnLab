@@ -26,3 +26,15 @@ In api/urls.py, configured URL patterns to connect the views with specific endpo
 perform_create(): This method is called during the POST request when a new book is being created. You can add custom validation (e.g., checking if the publication year is valid) and automatically set the author based on the logged-in user.
 
 perform_update(): This method is called when an existing book is being updated (PUT request). You can add extra validation (e.g., locking the author field from being updated) and perform checks like ensuring the publication_year is valid.
+
+- Filtering:
+    - Filter by title: /api/books/?title=SomeTitle
+    - Filter by author: /api/books/?author__name=AuthorName
+    - Filter by publication year: /api/books/?publication_year=2023
+
+- Searching:
+    - Search by title or author: /api/books/?search=SearchTerm
+
+- Ordering:
+    - Order by title: /api/books/?ordering=title
+    - Order by publication year (descending): /api/books/?ordering=-publication_year
