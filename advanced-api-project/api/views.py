@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 import datetime
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as django_filters  # Import django_filters
 
 # Create your views here.
 # ListView to retrieve all books
