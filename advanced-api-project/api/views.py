@@ -58,6 +58,7 @@ class BookUpdateView(generics.UpdateAPIView):
         publication_year = serializer.validated_data.get('publication_year')
         if publication_year > datetime.date.today().year:
             raise ValidationError("Publication year cannot be in the future.")
+        serializer.save()
 
 # DeleteView to remove a book
 class BookDeleteView(generics.DestroyAPIView):

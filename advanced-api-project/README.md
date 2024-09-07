@@ -38,3 +38,17 @@ perform_update(): This method is called when an existing book is being updated (
 - Ordering:
     - Order by title: /api/books/?ordering=title
     - Order by publication year (descending): /api/books/?ordering=-publication_year
+
+Testing Strategy
+
+This project includes unit tests for the Book API to verify that:
+- CRUD operations (Create, Retrieve, Update, Delete) work correctly.
+- Filtering, searching, and ordering functions behave as expected.
+- Permissions and authentication are correctly enforced on endpoints.
+
+### Running the Tests
+
+Use the following command to run the tests:
+
+```bash
+python manage.py test api
