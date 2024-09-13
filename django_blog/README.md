@@ -20,3 +20,25 @@ This document describes the setup and functionality of the authentication system
 - **Login:** After registration, navigate to `/login/` to log in.
 - **Logout:** Log out by visiting `/logout/`.
 - **Profile:** Once logged in, visit `/profile/` to view your profile information.
+
+
+## blog post features
+This Django blog allows users to:
+- View all blog posts.
+- View individual post details.
+- Create new posts (authenticated users only).
+- Edit their own posts.
+- Delete their own posts.
+
+## Permissions
+
+- Only logged-in users can create new posts.
+- Only the author of a post can edit or delete it.
+
+## URLs
+
+- `/posts/`: List all blog posts.
+- `/posts/new/`: Create a new post (logged-in users only).
+- `/posts/<int:pk>/`: View details of a specific post.
+- `/posts/<int:pk>/edit/`: Edit an existing post (post author only).
+- `/posts/<int:pk>/delete/`: Delete a post (post author only).
