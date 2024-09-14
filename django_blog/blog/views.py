@@ -115,17 +115,17 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         comment = self.get_object()
         return self.request.user == comment.author
     
-class PostsByTagView(ListView):
+class PostByTagListView(ListView):
     model = Post
-    template_name = 'blog/posts_by_tag.html'  # The template to display tagged posts
+    template_name = 'blog/posts_by_tag.html'
     context_object_name = 'posts'
-    paginate_by = 5
+    paginate_by = 5  # If you want pagination
 
     def get_queryset(self):
-        tag_slug = self.kwargs.get('tag_slug')
+        tag_slug = self.kwargs.get('tag_slug')  # Get the tag from the URL
         tag = get_object_or_404(Tag, slug=tag_slug)
         return Post.objects.filter(tags__in=[tag])
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tag'] = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
