@@ -6,6 +6,16 @@
     <h2>{{ post.title }}</h2>
     <p>{{ post.content }}</p>
 
+    <!-- Tags Section -->
+<div>
+    <strong>Tags:</strong>
+    {% for tag in post.tags.all %}
+        <a href="{% url 'posts_by_tag' tag.slug %}" class="badge">{{ tag.name }}</a>
+    {% empty %}
+        <span>No tags assigned to this post.</span>
+    {% endfor %}
+</div>
+
     {% if user == post.author %}
         <a href="{% url 'post_update' post.pk %}">Edit</a>
         <a href="{% url 'post_delete' post.pk %}">Delete</a>
