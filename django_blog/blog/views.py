@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.db.models import Q
+from taggit.models import Tag
 
 # Create your views here.
 def register(request):
@@ -31,6 +32,16 @@ class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) | 
+                Q(content__icontains=query) | 
+                Q(tags__name__icontains=query)
+            ).distinct()
+        return Post.objects.all()
 
 class PostDetailView(DetailView):
     model = Post
@@ -104,15 +115,18 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         comment = self.get_object()
         return self.request.user == comment.author
     
-def search_posts(request):
-    query = request.GET.get('q')
-    posts = Post.objects.all()
+class PostsByTagView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'  # The template to display tagged posts
+    context_object_name = 'posts'
+    paginate_by = 5
 
-    if query:
-        posts = posts.filter(
-            Q(title__icontains=query) |
-            Q(content__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
-
-    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[tag])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
+        return context
