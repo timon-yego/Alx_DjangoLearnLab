@@ -42,3 +42,9 @@ This Django blog allows users to:
 - `/posts/<int:pk>/`: View details of a specific post.
 - `/posts/<int:pk>/edit/`: Edit an existing post (post author only).
 - `/posts/<int:pk>/delete/`: Delete a post (post author only).
+
+### Comment Feature
+
+- Authenticated users can add, edit, and delete comments on posts.
+- Comments are linked to blog posts and displayed in the post detail view.
+- Users can only edit or delete their own comments.
