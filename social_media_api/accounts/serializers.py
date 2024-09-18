@@ -1,6 +1,8 @@
-from .models import CustomUser
 from rest_framework import serializers
-from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model, authenticate
+
+CustomUser = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,6 +11,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
+        # Create a new user
         user = CustomUser.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -16,8 +19,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             bio=validated_data.get('bio', ''),
             profile_picture=validated_data.get('profile_picture', None),
         )
+        # Create a token for the user
+        Token.objects.create(user=user)
         return user
-    
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -41,4 +46,3 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_following_count(self, obj):
         return obj.following.count()
-
