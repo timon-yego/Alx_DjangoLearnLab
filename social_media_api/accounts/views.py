@@ -9,8 +9,10 @@ class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
+
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
+        # After the object is created, create or get the token
         token, created = Token.objects.get_or_create(user=self.object)
         return Response({'token': token.key})
 
