@@ -108,3 +108,32 @@ To test the API, you can run the development server and use tools like Postman o
 
 ```bash
 python manage.py runserver
+
+
+---
+
+### Summary of Files and their Roles:
+
+1. **`accounts/models.py`**:
+   - Defines the `CustomUser` model, with `following` to manage user follow relationships.
+
+2. **`accounts/views.py`**:
+   - Implements views to handle follow and unfollow actions.
+
+3. **`accounts/urls.py`**:
+   - Defines URL routes for following and unfollowing users.
+
+4. **`posts/models.py`**:
+   - Defines the `Post` model (assumed to be already present).
+
+5. **`posts/views.py`**:
+   - Implements the `FeedView` to show posts from followed users.
+
+6. **`posts/urls.py`**:
+   - Adds the URL route for accessing the user’s post feed.
+
+7. **`posts/serializers.py`**:
+   - Serializes post data for API responses.
+
+8. **Testing**:
+   - Use Postman or Django API browser to ensure everything works as expected.
