@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
-
+from rest_framework import status
 
 # Create your views here.
 class PostViewSet(viewsets.ModelViewSet):
@@ -52,32 +52,33 @@ class FeedView(APIView):
 class LikePostView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, pk):
+    def post(self, request, pk, *args, **kwargs):
+        # Fetch the post object, or return 404 if not found
         post = get_object_or_404(Post, pk=pk)
-        user = request.user
 
-        if not Like.objects.filter(user=user, post=post).exists():
-            Like.objects.create(user=user, post=post)
-            
-            # Create a notification for the post author
-            Notification.objects.create(
-                recipient=post.author,
-                actor=user,
-                verb="liked your post",
-                target=post,
-            )
-            return Response({"message": "Post liked"}, status=200)
-        return Response({"message": "Post already liked"}, status=400)
+        # Create or retrieve a Like object
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
+        if created:
+            # Like was created, so the user has liked the post
+            return Response({"message": "Post liked."}, status=status.HTTP_201_CREATED)
+        else:
+            # The user has already liked this post
+            return Response({"message": "You have already liked this post."}, status=status.HTTP_200_OK)
+        
 class UnlikePostView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, pk):
+    def post(self, request, pk, *args, **kwargs):
+        # Fetch the post object, or return 404 if not found
         post = get_object_or_404(Post, pk=pk)
-        user = request.user
 
-        like = Like.objects.filter(user=user, post=post)
-        if like.exists():
+        try:
+            # Try to retrieve the Like object
+            like = Like.objects.get(user=request.user, post=post)
+            # If found, delete it to unlike the post
             like.delete()
-            return Response({"message": "Post unliked"}, status=200)
-        return Response({"message": "You haven't liked this post"}, status=400)
+            return Response({"message": "Post unliked."}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            # If the Like object doesn't exist, return an error
+            return Response({"message": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
