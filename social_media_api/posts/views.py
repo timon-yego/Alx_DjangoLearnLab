@@ -32,7 +32,17 @@ class FeedView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        followed_users = request.user.following.all()
-        posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
+        # Get the current user
+        user = request.user
+
+        # Get the users the current user is following
+        following_users = user.following.all()
+
+        # Filter posts from the users that the current user is following and order by creation date
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+
+        # Serialize the posts
         serializer = PostSerializer(posts, many=True)
+
+        # Return the serialized data
         return Response(serializer.data)
