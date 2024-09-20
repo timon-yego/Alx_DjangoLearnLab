@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
-from rest_framework import status
+from rest_framework import status, generics
 
 # Create your views here.
 class PostViewSet(viewsets.ModelViewSet):
@@ -54,7 +54,7 @@ class LikePostView(APIView):
 
     def post(self, request, pk, *args, **kwargs):
         # Use get_object_or_404 to fetch the Post by primary key (pk)
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Create or retrieve the Like object
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -72,7 +72,7 @@ class LikePostView(APIView):
             # If the user has already liked the post
             return Response({"message": "You have already liked this post."}, status=status.HTTP_200_OK)
         
-        
+
 class UnlikePostView(APIView):
     permission_classes = [IsAuthenticated]
 
