@@ -53,25 +53,25 @@ class LikePostView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk, *args, **kwargs):
-        # Fetch the post object or return 404 if not found
+        # Use get_object_or_404 to fetch the Post by primary key (pk)
         post = get_object_or_404(Post, pk=pk)
 
-        # Create or retrieve a Like object
+        # Create or retrieve the Like object
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if created:
-            # Like was created, so the user has liked the post
-            # Now, create a notification for the post's author
+            # If a like was created, send a notification
             Notification.objects.create(
-                recipient=post.author,  # recipient is the author of the post
-                actor=request.user,      # actor is the user who liked the post
-                verb="liked",            # describe the action
-                target=post              # the post that was liked
+                recipient=post.author,
+                actor=request.user,
+                verb="liked",
+                target=post
             )
             return Response({"message": "Post liked and notification sent."}, status=status.HTTP_201_CREATED)
         else:
-            # The user has already liked this post
+            # If the user has already liked the post
             return Response({"message": "You have already liked this post."}, status=status.HTTP_200_OK)
+        
         
 class UnlikePostView(APIView):
     permission_classes = [IsAuthenticated]
