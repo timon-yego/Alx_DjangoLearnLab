@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets,permissions
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework import filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
 
 
 # Create your views here.
@@ -46,3 +48,36 @@ class FeedView(APIView):
 
         # Return the serialized data
         return Response(serializer.data)
+
+class LikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        if not Like.objects.filter(user=user, post=post).exists():
+            Like.objects.create(user=user, post=post)
+            
+            # Create a notification for the post author
+            Notification.objects.create(
+                recipient=post.author,
+                actor=user,
+                verb="liked your post",
+                target=post,
+            )
+            return Response({"message": "Post liked"}, status=200)
+        return Response({"message": "Post already liked"}, status=400)
+
+class UnlikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        like = Like.objects.filter(user=user, post=post)
+        if like.exists():
+            like.delete()
+            return Response({"message": "Post unliked"}, status=200)
+        return Response({"message": "You haven't liked this post"}, status=400)
