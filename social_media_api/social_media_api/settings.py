@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xw1rxh9g@kd80-skbzqkhc@nj&yd8ymhkxt2k_+p^r)tn6u^g5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -138,3 +138,16 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+# Security settings
+
+# Enable XSS Protection
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent content from being displayed in an iframe
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent the browser from interpreting files as something else
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Ensure all requests are redirected to HTTPS
+SECURE_SSL_REDIRECT = True
